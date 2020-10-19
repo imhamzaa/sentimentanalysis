@@ -93,8 +93,9 @@ class SentimentAnalyzer:
 
     def result_accuracy(self, predicted_result, ytrain):
         # accuracy = (np.mean(predicted_result == list(set(ytrain)), dtype=np.float64)) * 1000
-        accuracy = (np.mean(predicted_result == ytrain, dtype=np.float64)) * 1000
-        accuracy = 100 if accuracy >= 100 else accuracy  # in case accuracy is 0.1 * 1000
+        # accuracy = (np.mean(predicted_result == ytrain, dtype=np.float64)) * 1000
+        # accuracy = 100 if accuracy >= 100 else accuracy  # in case accuracy is 0.1 * 1000
+        accuracy = np.mean(predicted_result == ytrain, dtype=np.float64)
         return accuracy
 
 
