@@ -79,23 +79,22 @@ class SentimentAnalyzer:
         clf = SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42).fit(X_train_tfidf, ytrain)
         return clf
 
-    def predict_result_multinomial(self, clf, count_vect, tfidf_transformer, input_value):
+    def multinomial_result(self, clf, count_vect, tfidf_transformer, input_value):
         X_new_counts = count_vect.transform([input_value])
         X_new_tfidf = tfidf_transformer.transform(X_new_counts)
         predicted_result = clf.predict(X_new_tfidf)
         return predicted_result
 
-    def predict_result_sgd(self, clf, count_vect, tfidf_transformer, input_value):
+    def sgd_result(self, clf, count_vect, tfidf_transformer, input_value):
         X_new_counts = count_vect.transform([input_value])
         X_new_tfidf = tfidf_transformer.transform(X_new_counts)
         predicted_result = clf.predict(X_new_tfidf)
         return predicted_result
 
     def result_accuracy(self, predicted_result, ytrain):
-        # accuracy = (np.mean(predicted_result == list(set(ytrain)), dtype=np.float64)) * 1000
-        # accuracy = (np.mean(predicted_result == ytrain, dtype=np.float64)) * 1000
-        # accuracy = 100 if accuracy >= 100 else accuracy  # in case accuracy is 0.1 * 1000
         accuracy = np.mean(predicted_result == ytrain, dtype=np.float64)
+        # Convert accuracy to percentage
+        accuracy = accuracy * 1000 if accuracy < 0.1 else accuracy * 100
         return accuracy
 
 
@@ -135,25 +134,23 @@ if not input_value:
 input_text = input_value
 input_value = lemmatize_input(input_value)
 
-# main execution
-mul_predicted_result = sentiment_analyzer.predict_result_multinomial(multinomial_algo, count_vect, tfidf_transformer,
-                                                                     input_value)
-sgd_predicted_result = sentiment_analyzer.predict_result_sgd(sgd_algo, count_vect, tfidf_transformer, input_value)
-predicted_result_accuracy_mul = sentiment_analyzer.result_accuracy(mul_predicted_result, ytrain)
-predicted_result_accuracy_sgd = sentiment_analyzer.result_accuracy(sgd_predicted_result, ytrain)
+multinomial_result = sentiment_analyzer.multinomial_result(multinomial_algo, count_vect, tfidf_transformer, input_value)
+sgd_result = sentiment_analyzer.sgd_result(sgd_algo, count_vect, tfidf_transformer, input_value)
+predicted_result_accuracy_mul = sentiment_analyzer.result_accuracy(multinomial_result, ytrain)
+predicted_result_accuracy_sgd = sentiment_analyzer.result_accuracy(sgd_result, ytrain)
 
 if predicted_result_accuracy_mul > predicted_result_accuracy_sgd:
     print('\n********** Multinomial Algorithm **********')
-    print(f'\nPredicted result of "{input_text}" is "{mul_predicted_result[0]}"')
-    print(f'\nAccuracy of predictation: {round(predicted_result_accuracy_mul, 1)}%')
+    print(f'\nPredicted result of "{input_text}" is "{multinomial_result[0]}"')
+    print(f'\nAccuracy of prediction: {predicted_result_accuracy_mul:.2f}%')
 elif predicted_result_accuracy_mul < predicted_result_accuracy_sgd:
     print('\n************** SGD Algorithm **************')
-    print(f'\nPredicted result of "{input_text}" is "{sgd_predicted_result[0]}"')
-    print(f'\nAccuracy of predictation: {round(predicted_result_accuracy_sgd, 1)}%')
+    print(f'\nPredicted result of "{input_text}" is "{sgd_result[0]}"')
+    print(f'\nAccuracy of prediction: {predicted_result_accuracy_sgd:.2f}%')
 else:
     print('\n********** Multinomial Algorithm **********')
-    print(f'\nPredicted result of "{input_text}" is "{mul_predicted_result[0]}"')
-    print(f'\nAccuracy of predictation: {round(predicted_result_accuracy_mul, 1)}%')
+    print(f'\nPredicted result of "{input_text}" is "{multinomial_result[0]}"')
+    print(f'\nAccuracy of prediction: {predicted_result_accuracy_mul:.2f}%')
     print('\n************** SGD Algorithm **************')
-    print(f'\nPredicted result of "{input_text}" is "{sgd_predicted_result[0]}"')
-    print(f'\nAccuracy of predictation: {round(predicted_result_accuracy_sgd, 1)}%')
+    print(f'\nPredicted result of "{input_text}" is "{sgd_result[0]}"')
+    print(f'\nAccuracy of prediction: {predicted_result_accuracy_sgd:.2f}%')
