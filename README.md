@@ -23,6 +23,12 @@ It has following main modules:
 
 
 #### Usage
+Before proceeding with running sentiment_analyzer.py, make sure to download required nltk modules. e.g. Run following code lines in Python Console or in IDE:
+
+`import nltk`
+
+`nltk.download('wordnet')`
+
 The sentiment_analyzer.py takes corpus.csv as input using following line of code:
 `file_to_read = Path('corpus.csv')`
 
