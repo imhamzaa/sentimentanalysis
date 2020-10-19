@@ -36,8 +36,6 @@ It reads file using `read_dataset` method where **pandas** is being used to read
 
 `dataset = pandas.read_csv(file_path, encoding='ISO-8859-1')`
 
-Code removes some invalid characters from datasource using **remove_invalid_characters** method. It is highly recommended to use cleaned data for better results.
-
 It then performs lemmatization on cleaned data using **WordNetLemmatizer** class of nltk module.
 After performing lemmatization, code tokenizes text using **CountVectorizer** class of scikit-learn module and converting data to term frequency.
 
@@ -50,3 +48,5 @@ At the end, code applies two ML algorithms to predict result:
 
 
 Overall, code is taking input text from user and after performing sentiment analysis, tells you the category of entered text or mood of user based on entered text.
+
+**NOTE:** It is highly recommended to use cleaned data for better results. The larger the dataset would be for training, the better result would be.
